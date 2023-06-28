@@ -10,6 +10,13 @@ from conftest import path_tmp, path_resources
 path_zip = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tmp'))
 
 
+def is_exist_zip(name, namelist):
+    for item in namelist:
+        if item == name:
+            return True
+    return False
+
+
 def test_create_zip():
     source = os.listdir(path_resources)
 
@@ -24,15 +31,10 @@ def test_create_zip():
         assert len(source) == len(archive.infolist())
 
         files_list = archive.namelist()
-        assert files_list == source
+        counter = 0
+        for name in source:
+            if is_exist_zip(name, files_list):
+                counter += 1
+        assert counter == len(source)
 
     os.remove(os.path.join(path_zip, 'new.zip'))
-
-
-
-
-
-
-
-
-
