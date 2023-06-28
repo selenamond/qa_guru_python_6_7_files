@@ -7,7 +7,7 @@ from conftest import path_tmp, path_resources
 типы файлов в один архив в tmp и проверят тестом в архиве каждый из файлов, 
 что он является тем самым, который был заархивирован, не распаковывая архив.'''
 
-path_zip = os.path.abspath(os.path.join(os.path.dirname(__file__), '../tmp'))
+path_zip = (os.path.join(path_tmp, 'new.zip'))
 
 
 def is_exist_zip(name, namelist):
@@ -20,14 +20,14 @@ def is_exist_zip(name, namelist):
 def test_create_zip():
     source = os.listdir(path_resources)
 
-    with ZipFile(os.path.join(path_zip, 'new.zip'), 'w', ZIP_DEFLATED) as archive:
+    with ZipFile(path_zip, 'w', ZIP_DEFLATED) as archive:
         for file in source:
             add_file = os.path.join(path_resources, file)
             archive.write(add_file, arcname=file)
 
-    assert os.path.exists(os.path.join(path_zip, 'new.zip'))
+    assert os.path.exists(path_zip)
 
-    with ZipFile(os.path.join(path_zip, 'new.zip')) as archive:
+    with ZipFile(path_zip) as archive:
         assert len(source) == len(archive.infolist())
 
         files_list = archive.namelist()
@@ -37,4 +37,4 @@ def test_create_zip():
                 counter += 1
         assert counter == len(source)
 
-    os.remove(os.path.join(path_zip, 'new.zip'))
+    os.remove(path_zip)
